@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import axios from '../../../axios-orders';
+import React, { Component } from 'react'
+import axios from '../../../axios-orders'
+import { connect } from 'react-redux'
 
-import Button from '../../../components/UI/Button/Button';
-import Spinner from '../../../components/UI/Spinner/Spinner';
-import Input from '../../../components/UI/Input/Input';
+import Button from '../../../components/UI/Button/Button'
+import Spinner from '../../../components/UI/Spinner/Spinner'
+import Input from '../../../components/UI/Input/Input'
 
-import classes from './ContactData.css';
+import classes from './ContactData.css'
 
 class ContactData extends Component {
   state = {
@@ -18,9 +19,7 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true,
-          minLength: 5,
-          maxLength: 5
+          required: true
         },
         valid: false,
         touched: false,
@@ -34,9 +33,7 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true,
-          minLength: 5,
-          maxLength: 5
+          required: true
         },
         valid: false,
         touched: false,
@@ -52,7 +49,7 @@ class ContactData extends Component {
         validation: {
           required: true,
           minLength: 5,
-          maxLength: 5
+          maxLength: 50
         },
         valid: false,
         touched: false,
@@ -66,9 +63,7 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true,
-          minLength: 5,
-          maxLength: 5
+          required: true
         },
         valid: false,
         touched: false,
@@ -82,9 +77,7 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true,
-          minLength: 5,
-          maxLength: 5
+          required: true
         },
         valid: false,
         touched: false,
@@ -108,15 +101,14 @@ class ContactData extends Component {
   }
 
   orderHandler = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     this.setState({loading: true})
     const formData = {}
     for (let formElementIdentifier in this.state.orderForm) {
       formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value
     }
-    console.log(formData)
     const order = {
-      ingredients: this.props.ingredients,
+      ingredients: this.props.ings,
       price: this.props.price.toFixed(2),
       orderData: formData
 
@@ -124,7 +116,7 @@ class ContactData extends Component {
     axios.post('/orders.json', order)
     .then(response => {
       this.setState({loading: false})
-      this.props.history.push('/');
+      this.props.history.push('/')
     })
     .catch(error => {
       this.setState({loading: false})
@@ -171,7 +163,7 @@ class ContactData extends Component {
   }
 
   render () {
-    const formElementArray = [];
+    const formElementArray = []
     for (let key in this.state.orderForm) {
       formElementArray.push({
         id: key,
@@ -211,4 +203,11 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    price: state.totalPrice
+  }
+}
+
+export default connect(mapStateToProps)(ContactData)
