@@ -10,7 +10,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import WithErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
 
-import * as actionTypes from '../../store/actions'
+import * as actionCreators from '../../store/actions'
 
 class BurgerBuilder extends Component {
   // constructor(props) {
@@ -106,8 +106,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdded: (igName) => dispatch({type: actionTypes.ADD_INGREDIENTS, ingredientName: igName}),
-    onIngredientRemoved: (igName) => dispatch({type: actionTypes.REMOVE_INGREDIENTS, ingredientName: igName})
+    onIngredientAdded: (igName) => dispatch(actionCreators.addIngredient(igName)),
+    onIngredientRemoved: (igName) => dispatch(actionCreators.removeIngredient(igName))
   }
 }
 
