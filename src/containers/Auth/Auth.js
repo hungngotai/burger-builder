@@ -44,6 +44,12 @@ class Auth extends Component {
     isSignup: true
   }
 
+  componentDidMount() {
+    if (!this.props.buildingBurger && this.props.redirectPath !== '/') {
+      this.props.onSetRedirectPath()
+    }
+  }
+
   checkValidity = (value, rules) => {
     let valid = true
 
@@ -127,7 +133,7 @@ class Auth extends Component {
 
     let authRedirect = null
     if (this.props.isAuthenticated) {
-      authRedirect = <Redirect to="/" />
+      authRedirect = <Redirect to={this.props.redirectPath} />
     }
 
     return (
@@ -153,13 +159,16 @@ const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
     error: state.auth.error,
-    isAuthenticated: state.auth.idToken !== null
+    isAuthenticated: state.auth.idToken !== null,
+    buildingBurger: state.burgerBuilder.building,
+    redirectPath: state.auth.authRedirectPath
   }
 }
 
 const mapDispathToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignup) => dispatch(actionCreators.auth(email, password, isSignup))
+    onAuth: (email, password, isSignup) => dispatch(actionCreators.auth(email, password, isSignup)),
+    onSetRedirectPath: () => dispatch(actionCreators.setRedirectPath('/'))
   }
 }
 
