@@ -7,7 +7,7 @@ import Button from '../../components/UI/Button/Button'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import classes from './Auth.css'
 import * as actionCreators from '../../store/actions'
-import { updateObject } from '../../shared/utility'
+import { updateObject, checkValidity } from '../../shared/utility'
 
 class Auth extends Component {
   state = {
@@ -51,37 +51,11 @@ class Auth extends Component {
     }
   }
 
-  checkValidity = (value, rules) => {
-    let valid = true
-
-    if(!rules) {
-      return true
-    }
-    if(rules.required) {
-      valid = value.trim() !== '' && valid
-    }
-    if(rules.minLength) {
-      valid = value.length >= rules.minLength && valid
-    }
-    if(rules.maxLength) {
-      valid = value.length <= rules.maxLength && valid
-    }
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      valid = pattern.test(value) && valid
-    }
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      valid = pattern.test(value) && valid
-    }
-    return valid
-  }
-
   inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(this.state.controls, {
       [controlName]: updateObject(this.state.controls[controlName], {
         value: event.target.value,
-        valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+        valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
         touched: true
       })
     })

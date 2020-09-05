@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from '../../../axios-orders'
 import { connect } from 'react-redux'
 import * as actionCreators from '../../../store/actions'
-import { updateObject } from '../../../shared/utility'
+import { updateObject, checkValidity } from '../../../shared/utility'
 
 import Button from '../../../components/UI/Button/Button'
 import Spinner from '../../../components/UI/Spinner/Spinner'
@@ -117,39 +117,10 @@ class ContactData extends Component {
     this.props.onOrderBurger(order, this.props.token)
   }
 
-  checkValidity = (value, rules) => {
-    let valid = true
-
-    if(!rules) {
-      return true
-    }
-
-    if(rules.required) {
-      valid = value.trim() !== '' && valid
-    }
-    if(rules.minLength) {
-      valid = value.length >= rules.minLength && valid
-    }
-    if(rules.maxLength) {
-      valid = value.length <= rules.maxLength && valid
-    }
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      valid = pattern.test(value) && valid
-    }
-
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      valid = pattern.test(value) && valid
-    }
-
-    return valid
-  }
-
   inputChangedHandler = (event, inputIdentifier) => {
     const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier], {
       value: event.target.value,
-      valid: this.checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+      valid: checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
       touched: true
     })
     const updatedForm = updateObject(this.state.orderForm, {
