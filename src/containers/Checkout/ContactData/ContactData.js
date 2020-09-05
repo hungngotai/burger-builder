@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from '../../../axios-orders'
 import { connect } from 'react-redux'
 import * as actionCreators from '../../../store/actions'
+import { updateObject } from '../../../shared/utility'
 
 import Button from '../../../components/UI/Button/Button'
 import Spinner from '../../../components/UI/Spinner/Spinner'
@@ -146,16 +147,14 @@ class ContactData extends Component {
   }
 
   inputChangedHandler = (event, inputIdentifier) => {
-    const updatedForm = {
-      ...this.state.orderForm
-    }
-    const updatedFormElement = {
-      ...updatedForm[inputIdentifier]
-    }
-    updatedFormElement.value = event.target.value
-    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
-    updatedFormElement.touched = true
-    updatedForm[inputIdentifier] = updatedFormElement
+    const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier], {
+      value: event.target.value,
+      valid: this.checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+      touched: true
+    })
+    const updatedForm = updateObject(this.state.orderForm, {
+      [inputIdentifier]: updatedFormElement
+    })
 
     let formValid = true
     for (let elementIdentifier in updatedForm) {
