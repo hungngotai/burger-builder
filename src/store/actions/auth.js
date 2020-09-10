@@ -23,11 +23,8 @@ export const authFail = error => {
 }
 
 export const authLogout = () => {
-  localStorage.removeItem('idToken')
-  localStorage.removeItem('localId')
-  localStorage.removeItem('expirationDate')
   return {
-    type: actionTypes.AUTH_LOGOUT
+    type: actionTypes.AUTH_INITIATE_LOGOUT
   }
 }
 

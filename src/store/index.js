@@ -5,8 +5,7 @@ import createSagaMiddleware from 'redux-saga'
 import burgerBuilderReducer from './reducers/burgerBuilder'
 import orderReducer from './reducers/order'
 import authReducer from './reducers/auth'
-
-import { logoutSaga } from './sagas/auth'
+import { watchAuth } from './sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 const rootReducer = combineReducers({
@@ -18,6 +17,6 @@ const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX
 const store = createStore(rootReducer, composeEnhancers(
   applyMiddleware(thunk, sagaMiddleware)))
 
-sagaMiddleware.run(logoutSaga)
+sagaMiddleware.run(watchAuth)
 
 export default store
