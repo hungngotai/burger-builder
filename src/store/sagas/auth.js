@@ -30,7 +30,7 @@ export function* authUserSaga(action) {
       const response = yield axios.post(url, payload)
       const expirationDate = yield new Date(new Date().getTime() + 1000 * response.data.expiresIn)
       yield put(actions.authSuccess(response.data))
-      yield put(action.checkAuthTimeout(response.data.expiresIn))
+      yield put(actions.checkAuthTimeout(response.data.expiresIn))
       yield localStorage.setItem('idToken', response.data.idToken)
       yield localStorage.setItem('localId', response.data.localId)
       yield localStorage.setItem('expirationDate', expirationDate)
@@ -38,4 +38,20 @@ export function* authUserSaga(action) {
     } catch (error) {
       yield put(actions.authFail(error.response.data.error))
     }
+}
+
+export function* authCheckStateSaga(action) {
+  const idToken = yield localStorage.getItem('idToken')
+  if (!idToken) {
+    yield put(actions.authLogout())
+  } else {
+    const expirationDate = yield new Date(localStorage.getItem('expirationDate'))
+    if (expirationDate > new Date()) {
+      const localId = yield localStorage.getItem('localId')
+      yield put(actions.authSuccess({idToken, localId}))
+      yield put(actions.checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000))
+    } else {
+      yield put(actions.authLogout())
+    }
+  }
 }
